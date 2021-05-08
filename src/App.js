@@ -36,7 +36,7 @@ const CardHeader = styled.div`
   background-color: rgba(24, 24, 24, 0.1);
   border-top-left-radius: ${({ theme }) => theme.border};
   border-top-right-radius: ${({ theme }) => theme.border};
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 2px rgba(41 187 137 / 45%);
   box-sizing: border-box;
 `;
 
@@ -48,7 +48,7 @@ const CardBody = styled.div`
   filter: blur(0.2px);
   border-bottom-left-radius: ${({ theme }) => theme.border};
   border-bottom-right-radius: ${({ theme }) => theme.border};
-  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 2px rgba(41 187 137 / 15%);
   box-sizing: border-box;
 `;
 const guests = [
@@ -75,7 +75,12 @@ const reducer = (state, action) => ({
 });
 
 function App() {
-  const [state, dispath] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const add = (value) =>
+    dispatch({ type: "guests", payload: [...state.guests, value] });
+
+  console.log(state);
 
   return (
     <ThemeProvider theme={theme}>
@@ -90,7 +95,7 @@ function App() {
             <Typography variant="h2">Humons</Typography>
           </CardHeader>
           <CardBody>
-            <GuestList guests={state.guests} />
+            <GuestList guests={state.guests} onSubmit={add} />
           </CardBody>
         </Card>
       </Container>

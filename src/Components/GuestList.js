@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import Typography from "./Typography";
-import Button from "./Button"
-import Input from "./Input"
+import Button from "./Button";
+import Input from "./Input";
 
-const GuestList = ({ className, guests }) => {
+const GuestList = ({ className, guests, onSubmit }) => {
   return (
     <ul className={className}>
       {guests.map((x, i) => (
@@ -12,7 +12,7 @@ const GuestList = ({ className, guests }) => {
           <Typography variant="body">{x}</Typography>
         </ListItem>
       ))}
-      <StyledAddGuest />
+      <StyledAddGuest onSubmit={onSubmit} />
     </ul>
   );
 };
@@ -35,17 +35,42 @@ const ListItem = styled.li`
 
 export default StyledGuestList;
 
-const AddGuestComponent = ({ className }) => {
+const AddGuestComponent = ({ className, onSubmit }) => {
   const [toggled, setToggled] = useState(false);
-  const ref = useRef(null);
+  const [value, setValue] = useState("");
+  const containerRef = useRef(null);
+  const inputRef = useRef(null);
   const handleClick = () => {
-    toggled ? ref.current.blur() : ref.current.focus();
+    if (toggled) {
+      document.addEventListener("mousedown", handleClickOutside);
+      if (onSubmit) {
+        console.log(value);
+
+        onSubmit(value);
+      }
+      setValue("");
+    } else {
+      inputRef.current.focus();
+    }
     setToggled(!toggled);
   };
 
+  function handleClickOutside(event) {
+    if (containerRef.current && !containerRef.current.contains(event.target)) {
+      document.removeEventListener("mousedown", handleClickOutside);
+      inputRef.current.blur();
+      setValue("");
+    }
+  }
+
   return (
-    <li className={className}>
-      <AnimatedInput toggled={toggled} ref={ref} />
+    <li className={className} ref={containerRef}>
+      <AnimatedInput
+        toggled={toggled}
+        ref={inputRef}
+        value={value}
+        onChange={(e) => setValue(e.currentTarget.value)}
+      />
       <AddGuestButton toggled={toggled} onClick={handleClick}>
         {toggled ? "Ok" : "Add"}
       </AddGuestButton>
@@ -64,19 +89,16 @@ const StyledAddGuest = styled(AddGuestComponent)`
     display: block;
     width: 0.5rem;
     height: 100%;
-    background-color:${({ theme }) => theme.controlBackground};
+    background-color: ${({ theme }) => theme.controlBackground};
     border-top-left-radius: 0.5rem;
     border-bottom-left-radius: 0.5rem;
     content: " ";
   }
 `;
 
-
-
 const AddGuestButton = styled(Button)`
   padding-left: ${({ toggled }) => (toggled ? "0.5rem" : "0")};
 `;
-
 
 const AnimatedInput = styled(Input)`
   transition: width 0.3s;

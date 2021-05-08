@@ -48,7 +48,7 @@ const theme = {
   color: "#fff",
   border: "0.4rem",
   spacing: "0.25rem",
-  controlBackground: "#29bb89",
+  controlBackground: "#29bb89cc",
   gradient: "linear-gradient(152deg, #8BC6EC 0%, #9599E2 100%)",
   oldGradient:
     "background-image: linear-gradient(76.3deg,rgba(44, 62, 78, 1) 12.6%,rgba(69, 103, 131, 1) 82.8%)",
